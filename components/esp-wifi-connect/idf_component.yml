@@ -1,0 +1,9 @@
+# AI Printer 自定义 WiFi 配置组件
+# 此本地组件会覆盖 managed_components 中的 78/esp-wifi-connect
+
+version: "2.3.2-custom"
+description: "ESP WiFi Connect component with custom AI Printer UI"
+
+dependencies:
+  idf:
+    version: ">=5.3"

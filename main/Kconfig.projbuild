@@ -1,0 +1,183 @@
+menu "AI Printer Config"
+
+config OTA_VERSION_URL
+    string "OTA Version URL"
+    default "http://192.168.3.238:30666/ota/"
+    help
+        OTA 升级检查地址 (暂未实现)
+
+config SERVER_HOST
+    string "后端服务器地址"
+    default "192.168.3.238:30666"
+    help
+        后端 API 服务器地址（IP:端口）
+
+
+choice
+    prompt "语言选择"
+    default LANGUAGE_ZH_CN
+    help
+        Select device display language
+
+    config LANGUAGE_ZH_CN
+        bool "Chinese"
+    config LANGUAGE_ZH_TW
+        bool "Chinese Traditional"
+    config LANGUAGE_EN_US
+        bool "English"
+    config LANGUAGE_JA_JP
+        bool "Japanese"
+    config LANGUAGE_TH_TH
+        bool "Thai (泰语)"
+endchoice
+
+
+choice CONNECTION_TYPE
+    prompt "Connection Type"
+    default CONNECTION_TYPE_MQTT_UDP
+    help
+        网络数据传输协议
+    config CONNECTION_TYPE_MQTT_UDP
+        bool "MQTT + UDP"
+    config CONNECTION_TYPE_WEBSOCKET
+        bool "Websocket"
+endchoice
+
+config WEBSOCKET_URL
+    depends on CONNECTION_TYPE_WEBSOCKET
+    string "Websocket URL"
+    default "ws://192.168.3.238:30666/ws/"
+    help
+        WebSocket 服务器地址 (后续语音交互用)
+
+config WEBSOCKET_ACCESS_TOKEN
+    depends on CONNECTION_TYPE_WEBSOCKET
+    string "Websocket Access Token"
+    default "test-token"
+    help
+        Access token for websocket communication.
+
+menu "MQTT Configuration (Direct)"
+    depends on CONNECTION_TYPE_MQTT_UDP
+
+    config MQTT_BROKER_URL
+        string "MQTT Broker URL"
+        default "mqtt://192.168.3.238:1883"
+        help
+            MQTT broker address. Example: mqtt://192.168.3.191:1883
+
+    config MQTT_CLIENT_ID_PREFIX
+        string "Client ID Prefix"
+        default "ai-printer-"
+        help
+            MQTT client ID prefix, MAC address will be appended.
+
+    config MQTT_SUBSCRIBE_TOPIC_PREFIX
+        string "Subscribe Topic Prefix"
+        default "printer/"
+        help
+            Topic prefix for receiving print commands.
+            Full topic: {prefix}{device_id}/command
+
+    config MQTT_PUBLISH_TOPIC_PREFIX
+        string "Publish Topic Prefix"
+        default "printer/"
+        help
+            Topic prefix for sending print results.
+            Full topic: {prefix}{device_id}/result
+endmenu
+
+choice BOARD_TYPE
+    prompt "Board Type"
+    default BOARD_TYPE_AI_PRINTER_LCD
+    help
+        Board type. 开发板类型
+    config BOARD_TYPE_AI_PRINTER_LCD
+        bool "AI-Printer-LCD (语音 + QSPI LCD + 热敏打印)"
+        help
+            - 480x480 QSPI LCD 屏幕预览
+            - ES7210 麦克风 + ES8311 扬声器
+            - 热敏打印机 (EM30L/EM20L)
+            - 长按按钮(GPIO47)录音，短按打印
+    config BOARD_TYPE_AI_PRINTER
+        bool "AI-Printer (语音交互 + OLED + 热敏打印)"
+    config BOARD_TYPE_AI_PRINTER_VOICE
+        bool "AI-Printer-Voice (语音 + OLED + 热敏打印)"
+        help
+            - ES7210 4通道麦克风阵列
+            - ES8311 扬声器DAC
+            - 热敏打印机 (EM30L/EM20L)
+            - 长按按钮(GPIO47)录音，短按打印
+    config BOARD_TYPE_BREAD_TEST
+        bool "面包板测试 (按钮触发打印)"
+    config BOARD_TYPE_BREAD_TEST_20L
+        bool "面包板测试 (EM20L 按钮触发打印)"
+    config BOARD_TYPE_BREAD_TEST_MQTT
+        bool "面包板测试 (MQTT 触发打印)"
+    config BOARD_TYPE_COMPONENT_SORTER
+        bool "AI 元器件分拣箱 (仅 LED + MAX98357A I2S功放 + 网络)"
+endchoice
+
+choice DISPLAY_OLED_TYPE
+    depends on BOARD_TYPE_AI_PRINTER
+    prompt "OLED Type"
+    default OLED_SSD1306_128X32
+    help
+        OLED 屏幕类型选择
+    config OLED_SSD1306_128X32
+        bool "SSD1306, 分辨率128*32"
+    config OLED_SSD1306_128X64
+        bool "SSD1306, 分辨率128*64"
+    config OLED_SH1106_128X64
+        bool "SH1106, 分辨率128*64"
+endchoice
+
+choice PRINTER_MODEL
+    prompt "Printer Model"
+    default PRINTER_MODEL_EM30L
+    help
+        选择热敏打印机模块型号
+
+    config PRINTER_MODEL_EM20L
+        bool "EM20L (58mm, 9600bps, 无切刀)"
+        help
+            - 打印宽度: 58mm (386 点)
+            - 默认波特率: 9600
+            - 无自动切刀
+
+    config PRINTER_MODEL_EM30L
+        bool "EM30L (80mm, 115200bps, 带切刀)"
+        help
+            - 打印宽度: 80mm (576 点)
+            - 默认波特率: 115200
+            - 支持自动半切/全切
+endchoice
+
+config USE_WECHAT_MESSAGE_STYLE
+    bool "使用微信聊天界面风格"
+    default n
+    help
+        使用微信聊天界面风格
+
+config USE_WAKE_WORD_DETECT
+    bool "启用唤醒词检测"
+    default y
+    depends on IDF_TARGET_ESP32S3 && SPIRAM
+    help
+        需要 ESP32 S3 与 AFE 支持
+
+config USE_AUDIO_PROCESSOR
+    bool "启用音频降噪、增益处理"
+    default y
+    depends on IDF_TARGET_ESP32S3 && SPIRAM
+    help
+        需要 ESP32 S3 与 AFE 支持
+
+config USE_REALTIME_CHAT
+    bool "启用可语音打断的实时对话模式（需要 AEC 支持）"
+    default n
+    depends on USE_AUDIO_PROCESSOR && BOARD_TYPE_AI_PRINTER
+    help
+        需要 ESP32 S3 与 AEC 开启，因为性能不够，不建议和微信聊天界面风格同时开启
+
+endmenu

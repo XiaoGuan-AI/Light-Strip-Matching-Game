@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>配置成功 - 灯带消消乐</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#0c0a09">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* 橙色渐变主题 */
+            --primary: #f97316;
+            --primary-dark: #ea580c;
+            --primary-light: #fb923c;
+            --accent: #fbbf24;
+            --bg-dark: #1c1917;
+            --bg-darker: #0c0a09;
+            --text-primary: #fafaf9;
+            --text-secondary: #d6d3d1;
+            --text-muted: #78716c;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            background: linear-gradient(160deg, var(--bg-dark) 0%, #451a03 40%, var(--bg-darker) 100%);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+        }
+
+        /* 成功图标 */
+        .success-ring {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin-bottom: 28px;
+        }
+
+        .success-circle {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                0 0 0 0 rgba(249, 115, 22, 0.4),
+                0 10px 32px rgba(249, 115, 22, 0.35);
+            animation: pulse 2s ease-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4), 0 10px 32px rgba(249, 115, 22, 0.35); }
+            70% { box-shadow: 0 0 0 14px rgba(249, 115, 22, 0), 0 10px 32px rgba(249, 115, 22, 0.35); }
+            100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0), 0 10px 32px rgba(249, 115, 22, 0.35); }
+        }
+
+        .checkmark {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+            stroke-width: 3;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 55;
+            stroke-dashoffset: 55;
+            animation: draw 0.5s ease forwards 0.2s;
+        }
+
+        @keyframes draw {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* 文字 */
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .message {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .countdown {
+            display: inline-block;
+            font-weight: 700;
+            color: var(--primary-light);
+            font-size: 17px;
+            min-width: 16px;
+        }
+
+        .message-en {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* 加载点 */
+        .dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 6px;
+        }
+
+        .dots span {
+            width: 7px;
+            height: 7px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: bounce 1.4s ease-in-out infinite both;
+        }
+
+        .dots span:nth-child(1) { animation-delay: -0.32s; }
+        .dots span:nth-child(2) { animation-delay: -0.16s; }
+        .dots span:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 底部 */
+        .footer {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .brand {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .brand-sub {
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .copy {
+            font-size: 10px;
+            color: var(--text-muted);
+            opacity: 0.6;
+            margin-top: 6px;
+        }
+
+        /* 移动端安全区域 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 16px;
+                padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+            }
+
+            .success-ring {
+                width: 72px;
+                height: 72px;
+                margin-bottom: 20px;
+            }
+
+            .checkmark {
+                width: 32px;
+                height: 32px;
+            }
+
+            .title {
+                font-size: 20px;
+                margin-bottom: 12px;
+            }
+
+            .message {
+                font-size: 13px;
+                margin-bottom: 16px;
+            }
+
+            .message-en {
+                font-size: 11px;
+            }
+
+            .countdown {
+                font-size: 15px;
+            }
+
+            .dots span {
+                width: 6px;
+                height: 6px;
+            }
+
+            .footer {
+                padding: 16px;
+                padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+            }
+
+            .brand {
+                font-size: 12px;
+            }
+
+            .brand-sub {
+                font-size: 9px;
+            }
+
+            .copy {
+                font-size: 9px;
+            }
+        }
+
+        /* 极小屏幕 */
+        @media (max-width: 360px) {
+            .container {
+                padding: 16px 12px;
+            }
+
+            .success-ring {
+                width: 64px;
+                height: 64px;
+            }
+
+            .checkmark {
+                width: 28px;
+                height: 28px;
+            }
+
+            .title {
+                font-size: 18px;
+            }
+
+            .message {
+                font-size: 12px;
+            }
+
+            .submit-btn {
+                padding: 12px;
+            }
+        }
+
+        /* 桌面端 */
+        @media (min-width: 600px) {
+            .success-ring {
+                width: 110px;
+                height: 110px;
+            }
+
+            .checkmark {
+                width: 48px;
+                height: 48px;
+            }
+
+            .title {
+                font-size: 30px;
+            }
+
+            .message {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-ring">
+            <div class="success-circle">
+                <svg class="checkmark" viewBox="0 0 50 50">
+                    <path d="M14 27 L22 35 L38 16"/>
+                </svg>
+            </div>
+        </div>
+
+        <h1 class="title">配置成功！</h1>
+
+        <div class="message">
+            <p>设备将在 <span class="countdown" id="countdown">3</span> 秒后重启</p>
+            <p class="message-en">Restarting in <span class="countdown" id="countdown-en">3</span>s</p>
+        </div>
+
+        <div class="dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="brand">灯带消消乐</div>
+        <div class="brand-sub">Light Strip Matching Game</div>
+        <div class="copy">配置完成后将自动重启</div>
+    </footer>
+
+    <script>
+        window.addEventListener('load', function() {
+            let count = 3;
+            const el1 = document.getElementById('countdown');
+            const el2 = document.getElementById('countdown-en');
+
+            const timer = setInterval(function() {
+                count--;
+                el1.textContent = count;
+                el2.textContent = count;
+
+                if (count <= 0) {
+                    clearInterval(timer);
+                    fetch('/reboot', { method: 'POST' })
+                        .then(r => {
+                            if (r.ok) window.close();
+                        })
+                        .catch(e => console.error(e));
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

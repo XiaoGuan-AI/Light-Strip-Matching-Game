@@ -1,0 +1,19 @@
+{
+  "version": 4,
+  "components": [
+    {
+      "part_number": "C1555",
+      "led_index": 0,
+      "r": 255,
+      "g": 0,
+      "b": 0
+    },
+    {
+      "part_number": "C2930027",
+      "led_index": 1,
+      "r": 0,
+      "g": 255,
+      "b": 0
+    }
+  ]
+}

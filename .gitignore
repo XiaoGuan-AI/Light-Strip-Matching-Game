@@ -1,0 +1,58 @@
+# Build directories
+build/
+tmp/
+releases/
+
+# ESP-IDF managed components (自动下载，不需要提交)
+managed_components/
+dependencies.lock
+
+# 本地自定义组件 - 必须提交到 Git！
+# components/esp-wifi-connect/ 包含自定义 WiFi 配网 UI
+
+# SDK config
+sdkconfig
+sdkconfig.old
+
+# Generated files
+main/assets/lang_config.h
+
+# IDE and editor
+.vscode/
+.devcontainer/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+
+# Reference/test code (not for production)
+reference code/
+cn_speech_commands_recognition/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.egg-info/
+.eggs/
+
+# Backup files
+*.bak
+*.backup
